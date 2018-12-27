@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 make
 ./gen_texte 50000 3 > texte3.txt
 ./gen_mots 10 10 3 > mots3.txt

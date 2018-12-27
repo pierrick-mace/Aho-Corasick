@@ -16,22 +16,22 @@ gen_mots: gen_mots.o
 gen_mots.o: gen_mots.c gen_mots.h gen_texte.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-ac-matrice : main-ac.o ac.o matriceTrie.o
+ac-matrice: main-ac.o ac.o matriceTrie.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-ac-hachage : main-ac.o ac.o tableTrie.o
+ac-hachage: main-ac.o ac.o tableTrie.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-main-ac.o : main-ac.c
+main-ac.o: main-ac.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-ac.o : ac.c
+ac.o: ac.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-matriceTrie.o : matriceTrie.c
+matriceTrie.o: matriceTrie.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-tableTrie.o : tableTrie.c
+tableTrie.o: tableTrie.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
