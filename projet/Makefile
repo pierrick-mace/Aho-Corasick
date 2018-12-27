@@ -35,4 +35,4 @@ tableTrie.o: tableTrie.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
-	rm -rf *.o gen_texte gen_mots ac-matrice ac-hachage
+	rm -rf *.o gen_texte gen_mots ac-matrice ac-hachage texte3.txt mots3.txt res-ac-hachage res-ac-matrice
