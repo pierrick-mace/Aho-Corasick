@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -std=c11 -pedantic -Wall -Wextra -Wconversion -Werror -g
+CFLAGS= -std=c11 -pedantic -Wall -Wextra -Wconversion -Werror -O2 -g
 LDFLAGS=
 
 all: gen_texte gen_mots ac-matrice ac-hachage
@@ -37,5 +37,8 @@ matriceTrie.o: matriceTrie.c
 tableTrie.o: tableTrie.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
+transition_matrix_trie.o: transition_matrix_trie.c
+	$(CC) -o $@ -c $< $(CFLAGS)
+
 clean:
-	rm -rf *.o gen_texte gen_mots ac-matrice ac-hachage texte3.txt mots3.txt res-ac-hachage res-ac-matrice
+	rm -rf *.o *.gch gen_texte gen_mots ac-matrice ac-hachage texte3.txt mots3.txt res-ac-hachage res-ac-matrice

@@ -46,7 +46,7 @@ Trie createTrie(int maxNode) {
     newTrie -> nextNode = 1;    // implicitement, la racine du trie est 0
     newTrie -> transition = NULL;
     newTrie -> finite = NULL;
-    
+
     size_t tableSize = TABLE_SIZE(maxNode);
     //printf("tableSize=%lu\n", tableSize);     /*---!!!debug!!!---*/
     newTrie -> transition = malloc(tableSize * sizeof *newTrie -> transition);
@@ -57,7 +57,7 @@ Trie createTrie(int maxNode) {
             t < newTrie -> transition + tableSize; ++t) {
         *t = NULL;
     }
-    
+
     newTrie -> finite = malloc((size_t)maxNode * sizeof (*newTrie -> finite));
     if (newTrie -> finite == NULL) {
         goto error;
@@ -65,7 +65,7 @@ Trie createTrie(int maxNode) {
     for (size_t* p = newTrie -> finite; p < newTrie -> finite + maxNode; ++p) {
         *p = 0;
     }
-    
+
     goto success;
     error:
     _disposeTrie(&newTrie);
@@ -102,7 +102,7 @@ void insertInTrie(Trie trie, unsigned char *w) {
     int old_state = 0;
     int curr_state = 0;
     unsigned char *p = w;
-    
+
     // recherche du plus long préfixe de w deja present dans le trie
     while (*p != '\0' && curr_state != -1) {
         old_state = curr_state;
@@ -125,7 +125,7 @@ void insertInTrie(Trie trie, unsigned char *w) {
             ++p;
         }
     }
-    
+
     t -> finite[curr_state]++;
 }
 
@@ -133,7 +133,7 @@ bool isInTrie(Trie trie, unsigned char *w) {
     struct _trie *t = trie;
     int curr_state = 0;
     unsigned char *p = w;
-    
+
     while (*p != '\0' && curr_state != -1) {
         curr_state = _nextState(t, curr_state, *p);
         ++p;
@@ -179,7 +179,7 @@ static int _nextState(struct _trie *trie, int node, unsigned char letter) {
         }
         t = t -> next;
     }
-    
+
     return next;
 }
 
@@ -195,7 +195,7 @@ static int _addTransition(struct _trie *trie, int startNode,
     newTransition -> startNode = startNode;
     newTransition -> targetNode = targetNode;
     newTransition -> letter = letter;
-    
+
     size_t tableSize = TABLE_SIZE(trie -> maxNode);
     size_t index = _hashFunc(startNode, letter) % tableSize;
     newTransition -> next = trie -> transition[index];
@@ -206,7 +206,7 @@ static int _addTransition(struct _trie *trie, int startNode,
 
 void _printTableHealth(struct _trie *trie) {
     size_t tableSize = TABLE_SIZE(trie -> maxNode);
-    
+
     size_t longestList = 0;
     size_t count = 0;
     for (struct _list **p = trie -> transition;
