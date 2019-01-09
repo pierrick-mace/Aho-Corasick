@@ -1,11 +1,9 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include "queue.h"
 #include "ac.h"
-
-// création du module intQueue
-QUEUE(int)
 
 struct _ac{
     Trie trie;
@@ -15,7 +13,7 @@ struct _ac{
 void _completeAC(AC ac);
 
 AC newAC(Trie trie) {
-    struct _ac *ac = malloc((sizeof *ac) + sizeTrie(trie) * (sizeof (size_t)));
+    struct _ac *ac = (struct _ac *) malloc((sizeof *ac) + sizeTrie(trie) * (sizeof (size_t)));
     if (ac == NULL) {
         return NULL;
     }
@@ -45,7 +43,7 @@ void disposeAC(AC* ac) {
 
 void _completeAC(AC ac) {
     // préparation de la file pour le parcours en largeur
-    intQueue f = newintQueue(sizeTrie(ac -> trie));
+    Queue f = newQueue(sizeTrie(ac -> trie));
     if (f == NULL) {
         disposeAC(&ac);
         return;
@@ -54,18 +52,18 @@ void _completeAC(AC ac) {
     for (size_t a = 0; a <= UCHAR_MAX; a++) {
         int p = nextTrie(ac -> trie, 0, (unsigned char) a);
         if (p != 0) {
-            addintQueue(f, p);
+            addQueue(f, (void*)(uintptr_t)(p));
             ac -> supp[p] = 0;
         }
     }
 
-    while (!isEmptyintQueue(f)) {
-        int node = popintQueue(f);
+    while (!isEmpty(f)) {
+        int node = (int) ((long) popQueue(f));
 
         for (size_t a = 0; a <= UCHAR_MAX; a++) {
             int p = nextTrie(ac -> trie, node, (unsigned char) a);
             if (p != -1) {
-                addintQueue(f, p);
+                addQueue(f, (void*)(uintptr_t) p);
                 int s = ac -> supp[node];
                 while (nextTrie(ac -> trie, s, (unsigned char) a) == -1) {
                     s = ac -> supp[s];
@@ -76,5 +74,5 @@ void _completeAC(AC ac) {
         }
     }
 
-    disposeintQueue(&f);
+    disposeQueue(&f);
 }
