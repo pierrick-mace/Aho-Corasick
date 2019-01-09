@@ -12,10 +12,13 @@ struct _trie {
   size_t *finite;        /* etats terminaux                      */
 };
 
-void insertInTrieEx(Trie trie, unsigned char *w, int currentNode);
-bool isInTrieEx(Trie trie, unsigned char *w, int currentNode);
-int isLetterInNode(int **transition, unsigned char *letter, int currentNode, int maxNode, int *nextNode);
-int isNodeFinal(Trie trie, int currentNode);
+// Fonctions auxiliaires (récursivité)
+static void insertInTrieEx(Trie trie, unsigned char *w, int currentNode);
+static bool isInTrieEx(Trie trie, unsigned char *w, int currentNode);
+
+// Fonctions utiles
+static int isLetterInNode(int **transition, unsigned char *letter, int currentNode, int maxNode, int *nextNode);
+static int isNodeFinal(Trie trie, int currentNode);
 
 Trie createTrie(int maxNode) {
   if (maxNode < 1) {
@@ -77,6 +80,7 @@ Trie createTrie(int maxNode) {
   return newTrie;
 }
 
+// TODO: modify function names
 size_t sizeTrie(Trie trie) {
   size_t s = (size_t) trie -> nextNode;
   return s;
@@ -107,7 +111,7 @@ void insertInTrie(Trie trie, unsigned char *w) {
   insertInTrieEx(trie, w, 0);
 }
 
-void insertInTrieEx(Trie trie, unsigned char *w, int currentNode) {
+static void insertInTrieEx(Trie trie, unsigned char *w, int currentNode) {
   if (trie == NULL || trie -> nextNode == trie -> maxNode || w == NULL || strlen((const char *) w) == 0) {
     return;
   }
@@ -137,7 +141,7 @@ void insertInTrieEx(Trie trie, unsigned char *w, int currentNode) {
   }
 }
 
-int isLetterInNode(int **transition, unsigned char *letter, int currentNode, int maxNode, int *nextNode) {
+static int isLetterInNode(int **transition, unsigned char *letter, int currentNode, int maxNode, int *nextNode) {
   for (int i = 0; i < maxNode; i++) {
     if (transition[currentNode][*letter] != -1) {
       *nextNode = transition[currentNode][*letter];
@@ -152,7 +156,7 @@ bool isInTrie(Trie trie, unsigned char *w) {
   return isInTrieEx(trie, w, 0);
 }
 
-bool isInTrieEx(Trie trie, unsigned char *w, int currentNode) {
+static bool isInTrieEx(Trie trie, unsigned char *w, int currentNode) {
   if (trie == NULL || w == NULL) {
     return 0;
   }
@@ -172,7 +176,7 @@ bool isInTrieEx(Trie trie, unsigned char *w, int currentNode) {
   }
 }
 
-int isNodeFinal(Trie trie, int currentNode) {
+static int isNodeFinal(Trie trie, int currentNode) {
   if (trie == NULL || currentNode > trie -> maxNode) {
     return 0;
   }
