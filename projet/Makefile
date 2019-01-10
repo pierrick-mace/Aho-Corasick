@@ -2,18 +2,18 @@ CC=gcc
 CFLAGS= -std=c11 -pedantic -Wall -Wextra -Wconversion -Werror -O2 -g
 LDFLAGS=
 
-all: gen_texte gen_mots ac-matrice ac-hachage
+all: genere-texte genere-mots ac-matrice ac-hachage
 
-gen_texte: gen_texte.o
+genere-texte: gen_texte.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-gen_texte.o: gen_texte.c gen_texte.h
+gen_texte.o: generators/gen_texte.c generators/gen_texte.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-gen_mots: gen_mots.o
+genere-mots: gen_mots.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-gen_mots.o: gen_mots.c gen_mots.h gen_texte.h
+gen_mots.o: generators/gen_mots.c generators/gen_mots.h generators/gen_texte.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 ac-matrice: main-ac.o ac.o matriceTrie.o queue.o
@@ -25,20 +25,17 @@ ac-hachage: main-ac.o ac.o tableTrie.o queue.o
 main-ac.o: main-ac.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-ac.o: ac.c
+ac.o: aho-corasick/ac.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-queue.o: queue.c queue.h
+queue.o: utils/queue.c utils/queue.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-matriceTrie.o: matriceTrie.c
+matriceTrie.o: trie/matriceTrie.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-tableTrie.o: tableTrie.c
-	$(CC) -o $@ -c $< $(CFLAGS)
-
-transition_matrix_trie.o: transition_matrix_trie.c
+tableTrie.o: trie/tableTrie.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
-	rm -rf *.o *.gch vgcore.* gen_texte gen_mots ac-matrice ac-hachage texte3.txt mots3.txt res-ac-hachage res-ac-matrice
+	rm -rf *.o *.gch vgcore.* genere-texte genere-mots ac-matrice ac-hachage texte3.txt mots3.txt res-ac-hachage res-ac-matrice

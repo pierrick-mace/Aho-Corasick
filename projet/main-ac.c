@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <string.h>
-#include "trie.h"
-#include "ac.h"
+#include "trie/trie.h"
+#include "aho-corasick/ac.h"
 
 static int insertWordsInTrie(Trie trie, FILE *file);
 static int getFileSize(FILE *file);
@@ -80,6 +80,8 @@ static int insertWordsInTrie(Trie trie, FILE *file) {
 
       insertInTrie(trie, (unsigned char *) line);
     }
+
+    free(line);
 
     return 0;
 }

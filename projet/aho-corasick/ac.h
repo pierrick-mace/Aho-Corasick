@@ -2,7 +2,7 @@
 #define __AC_H__
 
 #include <stdio.h>
-#include "trie.h"
+#include "../trie/trie.h"
 
 typedef struct aho_corasick {
   Trie trie;
