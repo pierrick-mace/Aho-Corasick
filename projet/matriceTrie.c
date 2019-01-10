@@ -1,7 +1,5 @@
 #include <limits.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
 #include "trie.h"
 
@@ -9,7 +7,7 @@ struct _trie {
   int maxNode;        /* Nombre maximal de noeuds du trie     */
   int nextNode;       /* Indice du prochain noeud disponible  */
   int **transition;   /* matrice de transition                */
-  size_t *finite;        /* etats terminaux                      */
+  size_t *finite;     /* etats terminaux                      */
 };
 
 // Fonctions auxiliaires (récursivité)
@@ -80,33 +78,6 @@ Trie createTrie(int maxNode) {
   return newTrie;
 }
 
-// TODO: modify function names
-size_t sizeTrie(Trie trie) {
-  size_t s = (size_t) trie -> nextNode;
-  return s;
-}
-
-int nextTrie(Trie trie, int node, unsigned char letter) {
-  return trie -> transition[node][letter];
-}
-
-size_t nbOccTrie(Trie trie, int node) {
-  return trie -> finite[node];
-}
-
-void addOccTrie(Trie trie, int node, size_t nbOcc) {
-  trie -> finite[node] += nbOcc;
-}
-
-void createInitialLoopTrie(Trie trie) {
-  int *zeroState = trie -> transition[0];
-  for (int *p = zeroState; p <= zeroState + UCHAR_MAX; p++) {
-    if (*p == -1) {
-      *p = 0;
-    }
-  }
-}
-
 void insertInTrie(Trie trie, unsigned char *w) {
   insertInTrieEx(trie, w, 0);
 }
@@ -141,17 +112,6 @@ static void insertInTrieEx(Trie trie, unsigned char *w, int currentNode) {
   }
 }
 
-static int isLetterInNode(int **transition, unsigned char *letter, int currentNode, int maxNode, int *nextNode) {
-  for (int i = 0; i < maxNode; i++) {
-    if (transition[currentNode][*letter] != -1) {
-      *nextNode = transition[currentNode][*letter];
-      return 1;
-    }
-  }
-
-  return 0;
-}
-
 bool isInTrie(Trie trie, unsigned char *w) {
   return isInTrieEx(trie, w, 0);
 }
@@ -176,17 +136,49 @@ static bool isInTrieEx(Trie trie, unsigned char *w, int currentNode) {
   }
 }
 
+// Utilities
+static int isLetterInNode(int **transition, unsigned char *letter, int currentNode, int maxNode, int *nextNode) {
+  for (int i = 0; i < maxNode; i++) {
+    if (transition[currentNode][*letter] != -1) {
+      *nextNode = transition[currentNode][*letter];
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+size_t sizeTrie(Trie trie) {
+  return (size_t) trie -> nextNode;
+}
+
+int nextTrie(Trie trie, int node, unsigned char letter) {
+  return trie -> transition[node][letter];
+}
+
+size_t getOccurencesTrie(Trie trie, int node) {
+  return trie -> finite[node];
+}
+
+void addOccurencesTrie(Trie trie, int node, size_t occurences) {
+  trie -> finite[node] += occurences;
+}
+
+void initializeTrie(Trie trie) {
+  int *zeroState = trie -> transition[0];
+  for (int *p = zeroState; p <= zeroState + UCHAR_MAX; p++) {
+    if (*p == -1) {
+      *p = 0;
+    }
+  }
+}
+
 static int isNodeFinal(Trie trie, int currentNode) {
   if (trie == NULL || currentNode > trie -> maxNode) {
     return 0;
   }
 
   return (int) trie -> finite[currentNode];
-}
-
-// TODO: replace disposeTrie with freeTrie in ac.c
-void disposeTrie(Trie *trie) {
-  freeTrie(*trie);
 }
 
 void freeTrie(Trie trie) {

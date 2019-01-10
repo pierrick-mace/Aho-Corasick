@@ -17,7 +17,7 @@ AC newAC(Trie trie) {
     if (ac == NULL) {
         return NULL;
     }
-    createInitialLoopTrie(trie);
+    initializeTrie(trie);
     ac -> trie = trie;
     _completeAC(ac);
     return ac;
@@ -31,7 +31,7 @@ size_t nbOccAC(AC ac, FILE *file) {
             node = ac -> supp[node];
         }
         node = nextTrie(ac -> trie, node, (unsigned char) c);
-        nbOcc += nbOccTrie(ac -> trie, node);
+        nbOcc += getOccurencesTrie(ac -> trie, node);
     }
     return nbOcc;
 }
@@ -69,7 +69,7 @@ void _completeAC(AC ac) {
                     s = ac -> supp[s];
                 }
                 ac -> supp[p] = nextTrie(ac -> trie, s, (unsigned char) a);
-                addOccTrie(ac -> trie, p, nbOccTrie(ac -> trie, ac -> supp[p]));
+                addOccurencesTrie(ac -> trie, p, getOccurencesTrie(ac -> trie, ac -> supp[p]));
             }
         }
     }

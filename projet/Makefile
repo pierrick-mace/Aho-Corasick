@@ -41,4 +41,4 @@ transition_matrix_trie.o: transition_matrix_trie.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
-	rm -rf *.o *.gch gen_texte gen_mots ac-matrice ac-hachage texte3.txt mots3.txt res-ac-hachage res-ac-matrice
+	rm -rf *.o *.gch vgcore.* gen_texte gen_mots ac-matrice ac-hachage texte3.txt mots3.txt res-ac-hachage res-ac-matrice

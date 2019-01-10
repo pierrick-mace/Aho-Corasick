@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     }
 
     if (_insertWords(trie, mots) == -1) {
-        disposeTrie(&trie);
+        freeTrie(trie);
         fclose(mots);
         fprintf(stderr, "erreur lors de l'insertion des mots dans le Trie\n");
         return EXIT_FAILURE;
@@ -43,14 +43,14 @@ int main(int argc, char **argv) {
 
     AC ac = newAC(trie);
     if (ac == NULL) {
-        disposeTrie(&trie);
+        freeTrie(trie);
         fprintf(stderr, "erreur lors de la préparation de Aho-Corasick\n");
         return EXIT_FAILURE;
     }
 
     FILE *texte = fopen(argv[2], "r");
     if (mots == NULL) {
-        disposeTrie(&trie);
+        freeTrie(trie);
         disposeAC(&ac);
         fprintf(stderr, "impossible d'ouvrir le fichier \"%s\""
             " en lecture\n", argv[2]);
@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     printf("%lu\n", nbOccAC(ac, texte));
 
     fclose(texte);
-    disposeTrie(&trie);
+    freeTrie(trie);
     disposeAC(&ac);
     return EXIT_SUCCESS;
 }
