@@ -6,8 +6,6 @@
 #include <limits.h>
 #include "gen_texte.h"
 
-#define FPC ' '
-
 int main(int argc, char *argv[]) {
   if (argc < 3) {
     fprintf(stderr, "Error: Missing parameters\n[USAGE]: %s length alphabet_size\n", argv[0]);
@@ -30,8 +28,10 @@ int main(int argc, char *argv[]) {
 
   srand((unsigned int) time(NULL));
 
-  int firstChar = (alphabet_size < UCHAR_MAX - FPC) ? FPC : '\0';
-  for (int k = 0; k < length; ++k) {
+  char firstPrintableChar = ' ';
+  int firstChar = (alphabet_size < UCHAR_MAX - firstPrintableChar) ? firstPrintableChar : '\0';
+
+  for (int i = 0; i < length; i++) {
       printf("%c", rand() % alphabet_size + firstChar);
   }
 

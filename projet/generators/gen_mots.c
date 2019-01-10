@@ -6,8 +6,6 @@
 #include "gen_mots.h"
 #include "gen_texte.h"
 
-#define FPC ' '
-
 int main(int argc, char *argv[]) {
 
   if (argc < 4) {
@@ -38,24 +36,15 @@ int main(int argc, char *argv[]) {
 
   srand((unsigned int) time(NULL));
 
-  int firstChar = (alphabet_size < UCHAR_MAX - FPC) ? FPC : '\0';
-  for (int j = 0; j < words; ++j) {
-      for (int k = 0; k < length; ++k) {
+  char firstPrintableChar = ' ';
+  int firstChar = (alphabet_size < UCHAR_MAX - firstPrintableChar) ? firstPrintableChar : '\0';
+
+  for (int i = 0; i < words; i++) {
+      for (int j = 0; j < length; j++) {
           printf("%c", rand() % alphabet_size + firstChar);
       }
       printf("\n");
   }
 
   return EXIT_SUCCESS;
-}
-
-void generate_text(char string[], int len, int alphabet_size) {
-  for (int i = 0; i < len; i++) {
-    char c = generate_random_character(alphabet_size);
-    string[i] = c;
-  }
-}
-
-char generate_random_character(int alphabet_size) {
-  return (char) ('A' + (char) (rand() % alphabet_size));
 }

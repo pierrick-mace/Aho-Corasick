@@ -16,19 +16,19 @@ genere-mots: gen_mots.o
 gen_mots.o: generators/gen_mots.c generators/gen_mots.h generators/gen_texte.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-ac-matrice: main-ac.o ac.o matriceTrie.o queue.o
+ac-matrice: main.o ac.o matriceTrie.o queue.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-ac-hachage: main-ac.o ac.o tableTrie.o queue.o
+ac-hachage: main.o ac.o tableTrie.o queue.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-main-ac.o: main-ac.c
+main.o: main.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 ac.o: aho-corasick/ac.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-queue.o: utils/queue.c utils/queue.h
+queue.o: queue/queue.c queue/queue.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 matriceTrie.o: trie/matriceTrie.c
