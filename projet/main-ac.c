@@ -7,10 +7,7 @@
 #include "trie.h"
 #include "ac.h"
 
-#define BUFFSIZE_INIT 64
-
 static int insertWordsInTrie(Trie trie, FILE *file);
-int _readLine(FILE *file, char **buff, size_t *buffSize);
 static int getFileSize(FILE *file);
 
 int main(int argc, char **argv) {
@@ -21,11 +18,16 @@ int main(int argc, char **argv) {
 
     FILE *words = fopen(argv[1], "r");
     if (words == NULL) {
-        fprintf(stderr, "Error: failed to open file %s", argv[1]);
+        fprintf(stderr, "Error: failed to open file %s\n", argv[1]);
         return EXIT_FAILURE;
     }
 
     int size = getFileSize(words);
+    if (size == -1) {
+      fprintf(stderr, "Error: invalid file size\n");
+      fclose(words);
+      return EXIT_FAILURE;
+    }
 
     Trie trie = createTrie(size);
     if (trie == NULL) {
@@ -37,7 +39,7 @@ int main(int argc, char **argv) {
     if (insertWordsInTrie(trie, words) == -1) {
         freeTrie(trie);
         fclose(words);
-        fprintf(stderr, "erreur lors de l'insertion des mots dans le Trie\n");
+        fprintf(stderr, "Error: failed to insert words in trie\n");
         return EXIT_FAILURE;
     }
 
@@ -46,22 +48,21 @@ int main(int argc, char **argv) {
     AC ac = createAC(trie);
     if (ac == NULL) {
         freeTrie(trie);
-        fprintf(stderr, "erreur lors de la préparation de Aho-Corasick\n");
+        fprintf(stderr, "Error: failed to initialize Aho-Corasick automaton\n");
         return EXIT_FAILURE;
     }
 
-    FILE *texte = fopen(argv[2], "r");
-    if (texte == NULL) {
+    FILE *text = fopen(argv[2], "r");
+    if (text == NULL) {
         freeTrie(trie);
         freeAC(ac);
-        fprintf(stderr, "impossible d'ouvrir le fichier \"%s\""
-            " en lecture\n", argv[2]);
+        fprintf(stderr, "Error: failed to open file %s\n", argv[2]);
         return EXIT_FAILURE;
     }
 
-    printf("%lu\n", getOccurencesAC(ac, texte));
+    printf("%lu\n", getOccurencesAC(ac, text));
 
-    fclose(texte);
+    fclose(text);
     freeTrie(trie);
     freeAC(ac);
     return EXIT_SUCCESS;
@@ -75,7 +76,6 @@ static int insertWordsInTrie(Trie trie, FILE *file) {
     while ((read = getline(&line, &len, file)) != -1) {
       if ((line)[read - 1] == '\n') {
           (line)[read - 1] = '\0';
-          --read;
       }
 
       insertInTrie(trie, (unsigned char *) line);
