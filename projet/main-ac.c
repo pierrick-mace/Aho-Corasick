@@ -51,17 +51,17 @@ int main(int argc, char **argv) {
     FILE *texte = fopen(argv[2], "r");
     if (mots == NULL) {
         freeTrie(trie);
-        disposeAC(&ac);
+        freeAC(ac);
         fprintf(stderr, "impossible d'ouvrir le fichier \"%s\""
             " en lecture\n", argv[2]);
         return EXIT_FAILURE;
     }
 
-    printf("%lu\n", nbOccAC(ac, texte));
+    printf("%lu\n", getOccurencesAC(ac, texte));
 
     fclose(texte);
     freeTrie(trie);
-    disposeAC(&ac);
+    freeAC(ac);
     return EXIT_SUCCESS;
 }
 

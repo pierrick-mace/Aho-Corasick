@@ -1,16 +1,16 @@
-#ifndef AC_H
-#define AC_H
+#ifndef __AC_H__
+#define __AC_H__
 
 #include <stdio.h>
 #include "trie.h"
 
-typedef struct ac {
+typedef struct aho_corasick {
   Trie trie;
-  int supp[];
+  int sup[];
 } *AC;
 
 AC createAC(Trie trie);
-size_t nbOccAC(AC ac, FILE *file);
-void disposeAC(AC* ac);
+size_t getOccurencesAC(AC ac, FILE *file);
+void freeAC(AC ac);
 
-#endif // AC_H
+#endif

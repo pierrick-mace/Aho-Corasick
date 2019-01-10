@@ -5,7 +5,7 @@
 #include "queue.h"
 #include "ac.h"
 
-void _completeAC(AC ac);
+static void complete(AC ac);
 
 AC createAC(Trie trie) {
   AC ac = (AC) malloc((sizeof *ac) + sizeTrie(trie) * (sizeof (size_t)));
@@ -16,40 +16,39 @@ AC createAC(Trie trie) {
 
   initializeTrie(trie);
   ac -> trie = trie;
-  _completeAC(ac);
+  complete(ac);
   return ac;
 }
 
-size_t nbOccAC(AC ac, FILE *file) {
-  size_t nbOcc = 0;
+size_t getOccurencesAC(AC ac, FILE *file) {
+  size_t occ = 0;
   int node = 0;
-  for (int c = fgetc(file); c != EOF; c = fgetc(file)) {
+
+  int c;
+  while ((c = fgetc(file)) != EOF) {
     while (nextTrie(ac -> trie, node, (unsigned char) c) == -1) {
-      node = ac -> supp[node];
+      node = ac -> sup[node];
     }
+
     node = nextTrie(ac -> trie, node, (unsigned char) c);
-    nbOcc += getOccurencesTrie(ac -> trie, node);
+    occ += getOccurencesTrie(ac -> trie, node);
   }
-  return nbOcc;
+
+  return occ;
 }
 
-void disposeAC(AC* ac) {
-  free(*ac);
-  *ac = NULL;
-}
-
-void _completeAC(AC ac) {
+static void complete(AC ac) {
   Queue f = newQueue(sizeTrie(ac -> trie));
   if (f == NULL) {
-    disposeAC(&ac);
+    freeAC(ac);
     return;
   }
 
   for (size_t a = 0; a <= UCHAR_MAX; a++) {
     int p = nextTrie(ac -> trie, 0, (unsigned char) a);
     if (p != 0) {
-      enQueue(f, (void*)(uintptr_t)(p));
-      ac -> supp[p] = 0;
+      enQueue(f, (void*) (uintptr_t) p);
+      ac -> sup[p] = 0;
     }
   }
 
@@ -61,18 +60,23 @@ void _completeAC(AC ac) {
 
       if (p != -1) {
         enQueue(f, (void *) (uintptr_t) p);
-        int s = ac -> supp[r];
+        int s = ac -> sup[r];
 
         while (nextTrie(ac -> trie, s, (unsigned char) a) == -1) {
-          s = ac -> supp[s];
+          s = ac -> sup[s];
         }
 
-        ac -> supp[p] = nextTrie(ac -> trie, s, (unsigned char) a);
+        ac -> sup[p] = nextTrie(ac -> trie, s, (unsigned char) a);
 
-        addOccurencesTrie(ac -> trie, p, getOccurencesTrie(ac -> trie, ac -> supp[p]));
+        addOccurencesTrie(ac -> trie, p, getOccurencesTrie(ac -> trie, ac -> sup[p]));
       }
     }
   }
 
   freeQueue(f);
+}
+
+void freeAC(AC ac) {
+  free(ac);
+  ac = NULL;
 }
