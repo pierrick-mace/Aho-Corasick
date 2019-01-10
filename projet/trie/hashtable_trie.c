@@ -19,7 +19,7 @@ struct _trie {
   int maxNode;        /* Nombre maximal de noeuds du trie */
   int nextNode;       /* Indice du prochain noeud disponible */
   List *transition;   /* listes d’adjacence */
-  size_t *finite;      /* etats terminaux */
+  size_t *finite;     /* etats terminaux */
 };
 
 static size_t hashfun(int node_p, unsigned char letter);

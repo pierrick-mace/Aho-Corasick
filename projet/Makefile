@@ -16,10 +16,10 @@ genere-mots: gen_mots.o
 gen_mots.o: generators/gen_mots.c generators/gen_mots.h generators/gen_texte.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-ac-matrice: main.o ac.o matriceTrie.o queue.o
+ac-matrice: main.o ac.o transition_matrix_trie.o queue.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-ac-hachage: main.o ac.o tableTrie.o queue.o
+ac-hachage: main.o ac.o hashtable_trie.o queue.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 main.o: main.c
@@ -31,10 +31,10 @@ ac.o: aho-corasick/ac.c
 queue.o: queue/queue.c queue/queue.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-matriceTrie.o: trie/matriceTrie.c
+transition_matrix_trie.o: trie/transition_matrix_trie.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-tableTrie.o: trie/tableTrie.c
+hashtable_trie.o: trie/hashtable_trie.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
