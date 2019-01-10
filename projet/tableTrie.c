@@ -7,19 +7,19 @@
 #define TABLE_SIZE(maxNode) (size_t) ((maxNode - 1) / LOAD_FACTOR + 1)
 
 struct _list {
-    int startNode;          /* etat de depart de la transition */
-    int targetNode;         /* cible de la transition */
-    unsigned char letter;   /* etiquette de la transition */
-    struct _list *next;     /* maillon suivant */
+  int startNode;          /* etat de depart de la transition */
+  int targetNode;         /* cible de la transition */
+  unsigned char letter;   /* etiquette de la transition */
+  struct _list *next;     /* maillon suivant */
 };
 
 typedef struct _list *List;
 
 struct _trie {
-    int maxNode;        /* Nombre maximal de noeuds du trie */
-    int nextNode;       /* Indice du prochain noeud disponible */
-    List *transition;   /* listes d’adjacence */
-    size_t *finite;       /* etats terminaux */
+  int maxNode;        /* Nombre maximal de noeuds du trie */
+  int nextNode;       /* Indice du prochain noeud disponible */
+  List *transition;   /* listes d’adjacence */
+  size_t *finite;      /* etats terminaux */
 };
 
 static size_t hashfun(int node_p, unsigned char letter);
@@ -28,79 +28,79 @@ static int newTransition(Trie trie, int startNode, unsigned char letter, int tar
 static int isInTrieEx(Trie trie, unsigned char *w, int currentNode);
 
 Trie createTrie(int maxNode) {
-    if (maxNode < 1) {
-        return NULL;
-    }
+  if (maxNode < 1) {
+    return NULL;
+  }
 
-    Trie newTrie = (Trie) malloc(sizeof(*newTrie));
-    if (newTrie == NULL) {
-      fprintf(stderr, "Error: failed to allocate memory\n");
-      return NULL;
-    }
+  Trie newTrie = (Trie) malloc(sizeof(*newTrie));
+  if (newTrie == NULL) {
+    fprintf(stderr, "Error: failed to allocate memory\n");
+    return NULL;
+  }
 
-    newTrie -> nextNode = 1;
-    newTrie -> maxNode = maxNode;
+  newTrie -> nextNode = 1;
+  newTrie -> maxNode = maxNode;
 
-    List *transition = (List *) malloc((size_t) TABLE_SIZE(maxNode) * sizeof(*transition));
-    if (transition == NULL) {
-      freeTrie(newTrie);
-      return NULL;
-    }
+  List *transition = (List *) malloc((size_t) TABLE_SIZE(maxNode) * sizeof(*transition));
+  if (transition == NULL) {
+    freeTrie(newTrie);
+    return NULL;
+  }
 
-    newTrie -> transition = transition;
-    for (int i = 0; i < (int) TABLE_SIZE(maxNode); i++) {
-      newTrie -> transition[i] = NULL;
-    }
+  newTrie -> transition = transition;
+  for (int i = 0; i < (int) TABLE_SIZE(maxNode); i++) {
+    newTrie -> transition[i] = NULL;
+  }
 
-    size_t *finite = (size_t *) malloc((size_t) maxNode * sizeof(*finite));
-    if (finite == NULL) {
-      freeTrie(newTrie);
-      return NULL;
-    }
+  size_t *finite = (size_t *) malloc((size_t) maxNode * sizeof(*finite));
+  if (finite == NULL) {
+    freeTrie(newTrie);
+    return NULL;
+  }
 
-    newTrie -> finite = finite;
-    memset(newTrie -> finite, 0, (size_t) maxNode * sizeof(newTrie -> finite));
+  newTrie -> finite = finite;
+  memset(newTrie -> finite, 0, (size_t) maxNode * sizeof(newTrie -> finite));
 
-    return newTrie;
+  return newTrie;
 }
 
 void insertInTrie(Trie trie, unsigned char *w) {
 
-    int currentNode = 0;
-    int next = 0;
-    unsigned char *word = w;
+  int currentNode = 0;
+  int next = 0;
+  unsigned char *word = w;
 
-    while (*word != '\0' && next != -1) {
-        currentNode = next;
-        next = nextNode(trie, next, *word);
-        word++;
+  while (*word != '\0' && next != -1) {
+    currentNode = next;
+    next = nextNode(trie, next, *word);
+    word++;
+  }
+
+  if (next == -1) {
+    next = currentNode;
+    word--;
+
+    if (strlen((const char *) word) > (size_t) (trie -> maxNode - trie -> nextNode)) {
+      fprintf(stderr, "Error: Cannot insert word (max nodes reached)\n");
+      return;
     }
-
-    if (next == -1) {
-        next = currentNode;
-        word--;
-
-        if (strlen((const char *) word) > (size_t) (trie -> maxNode - trie -> nextNode)) {
-            fprintf(stderr, "Error: Cannot insert word (max nodes reached)\n");
-            return;
-        }
-        while (*word != '\0') {
-            newTransition(trie, next, *word, trie -> nextNode);
-            next = trie -> nextNode;
-            trie -> nextNode++;
-            word++;
-        }
+    while (*word != '\0') {
+      newTransition(trie, next, *word, trie -> nextNode);
+      next = trie -> nextNode;
+      trie -> nextNode++;
+      word++;
     }
+  }
 
-    trie -> finite[next]++;
+  trie -> finite[next]++;
 }
 
 bool isInTrie(Trie trie, unsigned char *w) {
-    if (trie == NULL || w == NULL) {
-      return 0;
-    }
+  if (trie == NULL || w == NULL) {
+    return 0;
+  }
 
-    return isInTrieEx(trie, w, 0);
+  return isInTrieEx(trie, w, 0);
 }
 
 static int isInTrieEx(Trie trie, unsigned char *w, int currentNode) {
@@ -135,67 +135,67 @@ static int isInTrieEx(Trie trie, unsigned char *w, int currentNode) {
 // Utilities
 
 static size_t hashfun(int node, unsigned char letter) {
-      return (size_t) ((node * 33 + letter));
+  return (size_t) ((node * 33 + letter));
 }
 
 static int nextNode(Trie trie, int node, unsigned char letter) {
-    size_t idx = hashfun(node, letter) % TABLE_SIZE(trie -> maxNode);
-    int next = -1;
+  size_t idx = hashfun(node, letter) % TABLE_SIZE(trie -> maxNode);
+  int next = -1;
 
-    List transition = trie -> transition[idx];
+  List transition = trie -> transition[idx];
 
-    while (transition != NULL && next == -1) {
-        if (transition -> startNode == node && transition -> letter == letter) {
-            next = transition -> targetNode;
-        }
-
-        transition = transition -> next;
+  while (transition != NULL && next == -1) {
+    if (transition -> startNode == node && transition -> letter == letter) {
+      next = transition -> targetNode;
     }
 
-    return next;
+    transition = transition -> next;
+  }
+
+  return next;
 }
 
 static int newTransition(Trie trie, int startNode, unsigned char letter, int targetNode) {
-    List transition = (List) malloc(sizeof *transition);
+  List transition = (List) malloc(sizeof *transition);
 
-    if (transition == NULL) {
-        return -1;
-    }
+  if (transition == NULL) {
+    return -1;
+  }
 
-    transition -> startNode = startNode;
-    transition -> targetNode = targetNode;
-    transition -> letter = letter;
+  transition -> startNode = startNode;
+  transition -> targetNode = targetNode;
+  transition -> letter = letter;
 
-    size_t idx = hashfun(startNode, letter) % TABLE_SIZE(trie -> maxNode);
+  size_t idx = hashfun(startNode, letter) % TABLE_SIZE(trie -> maxNode);
 
-    transition -> next = trie -> transition[idx];
-    trie -> transition[idx] = transition;
+  transition -> next = trie -> transition[idx];
+  trie -> transition[idx] = transition;
 
-    return 0;
+  return 0;
 }
 
 size_t sizeTrie(Trie trie) {
-    return (size_t) trie -> nextNode;
+  return (size_t) trie -> nextNode;
 }
 
 int nextTrie(Trie trie, int node, unsigned char letter) {
-    return nextNode(trie, node, letter);
+  return nextNode(trie, node, letter);
 }
 
 size_t getOccurencesTrie(Trie trie, int node) {
-    return trie -> finite[node];
+  return trie -> finite[node];
 }
 
 void addOccurencesTrie(Trie trie, int node, size_t occurences) {
-    trie -> finite[node] += occurences;
+  trie -> finite[node] += occurences;
 }
 
 void initializeTrie(Trie trie) {
-    for (size_t c = 0; c <= UCHAR_MAX; c++) {
-        if (nextNode(trie, 0, (unsigned char) c) == -1) {
-            newTransition(trie, 0, (unsigned char) c, 0);
-        }
+  for (size_t c = 0; c <= UCHAR_MAX; c++) {
+    if (nextNode(trie, 0, (unsigned char) c) == -1) {
+      newTransition(trie, 0, (unsigned char) c, 0);
     }
+  }
 }
 
 void freeTrie(Trie trie) {

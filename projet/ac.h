@@ -4,9 +4,12 @@
 #include <stdio.h>
 #include "trie.h"
 
-typedef struct _ac* AC;
+typedef struct ac {
+  Trie trie;
+  int supp[];
+} *AC;
 
-AC newAC(Trie trie);
+AC createAC(Trie trie);
 size_t nbOccAC(AC ac, FILE *file);
 void disposeAC(AC* ac);
 

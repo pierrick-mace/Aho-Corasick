@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 
     fclose(mots);
 
-    AC ac = newAC(trie);
+    AC ac = createAC(trie);
     if (ac == NULL) {
         freeTrie(trie);
         fprintf(stderr, "erreur lors de la préparation de Aho-Corasick\n");

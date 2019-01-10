@@ -14,25 +14,25 @@ Queue newQueue(size_t capacity) {
   q -> queue = (void **) malloc(q -> capacity * (sizeof(void *)));
 
   if (q -> queue == NULL) {
-    disposeQueue(&q);
+    freeQueue(q);
     return NULL;
   }
 
   return q;
 }
 
-bool isEmpty(Queue q) {
+bool isQueueEmpty(Queue q) {
   return q -> head == q -> tail;
 }
 
-void addQueue(Queue q, void *elem) {
+void enQueue(Queue q, void *elem) {
   if ((q -> tail + 1) % q -> capacity != q->head) {
     q -> queue[q -> tail] = elem;
     q -> tail = (q -> tail + 1) % q -> capacity;
   }
 }
 
-void *popQueue(Queue q) {
+void *deQueue(Queue q) {
   void *elem = q -> queue[q -> head];
   if (q -> head != q -> tail) {
     q -> head = (q -> head + 1) % q -> capacity;
@@ -41,11 +41,11 @@ void *popQueue(Queue q) {
   return elem;
 }
 
-void disposeQueue(Queue *q) {
-  if ((*q) -> queue != NULL) {
-    free((*q) -> queue);
+void freeQueue(Queue q) {
+  if (q -> queue != NULL) {
+    free(q -> queue);
   }
 
-  free(*q);
-  *q = NULL;
+  free(q);
+  q = NULL;
 }

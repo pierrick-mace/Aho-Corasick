@@ -4,19 +4,17 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-struct queue {
+typedef struct queue {
   size_t capacity;
   size_t head;
   size_t tail;
   void **queue;
-};
-
-typedef struct queue *Queue;
+} *Queue;
 
 Queue newQueue(size_t capacity);
-bool isEmpty(Queue q);
-void addQueue(Queue q, void *element);
-void *popQueue(Queue q);
-void disposeQueue(Queue *q);
+bool isQueueEmpty(Queue q);
+void enQueue(Queue q, void *element);
+void *deQueue(Queue q);
+void freeQueue(Queue q);
 
 #endif
