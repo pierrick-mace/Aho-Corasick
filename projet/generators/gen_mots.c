@@ -8,8 +8,8 @@
 
 int main(int argc, char *argv[]) {
 
-  if (argc < 4) {
-    fprintf(stderr, "Error: Missing parameters\n[USAGE]: ./gen_mots words length alphabet_size\n");
+  if (argc < 5) {
+    fprintf(stderr, "Error: Missing parameters\n[USAGE]: ./gen_mots words min_length max_length alphabet_size\n");
     return EXIT_FAILURE;
   }
 
@@ -20,14 +20,21 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  int length = atoi(argv[2]);
+  int minLength = atoi(argv[2]);
 
-  if (length < 0) {
-    fprintf(stderr, "Error: invalid length value (%d)\n", length);
+  if (minLength < 0) {
+    fprintf(stderr, "Error: invalid minimum length value (%d)\n", minLength);
     return EXIT_FAILURE;
   }
 
-  int alphabet_size = atoi(argv[3]);
+  int maxLength = atoi(argv[3]);
+
+  if (maxLength < 0 || maxLength < minLength) {
+    fprintf(stderr, "Error: invalid maximum length value (%d)\n", maxLength);
+    return EXIT_FAILURE;
+  }
+
+  int alphabet_size = atoi(argv[4]);
 
   if (alphabet_size < 0) {
     fprintf(stderr, "Error: invalid alphabet size value (%d)\n", alphabet_size);
@@ -40,6 +47,7 @@ int main(int argc, char *argv[]) {
   int firstChar = (alphabet_size < UCHAR_MAX - firstPrintableChar) ? firstPrintableChar : '\0';
 
   for (int i = 0; i < words; i++) {
+      int length = rand() % (maxLength - minLength + 1) + minLength;
       for (int j = 0; j < length; j++) {
           printf("%c", rand() % alphabet_size + firstChar);
       }

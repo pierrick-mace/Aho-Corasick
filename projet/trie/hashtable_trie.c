@@ -84,6 +84,7 @@ void insertInTrie(Trie trie, unsigned char *w) {
       fprintf(stderr, "Error: Cannot insert word (max nodes reached)\n");
       return;
     }
+
     while (*word != '\0') {
       newTransition(trie, next, *word, trie -> nextNode);
       next = trie -> nextNode;
@@ -191,16 +192,24 @@ void addOccurencesTrie(Trie trie, int node, size_t occurences) {
 }
 
 void initializeTrie(Trie trie) {
-  for (size_t c = 0; c <= UCHAR_MAX; c++) {
-    if (nextNode(trie, 0, (unsigned char) c) == -1) {
-      newTransition(trie, 0, (unsigned char) c, 0);
+  for (size_t i = 0; i <= UCHAR_MAX; i++) {
+    if (nextNode(trie, 0, (unsigned char) i) == -1) {
+      newTransition(trie, 0, (unsigned char) i, 0);
     }
   }
 }
 
+// void printHashtableHealth(Trie trie) {
+//   if (trie == NULL) {
+//     return;
+//   }
+//
+//   printf("Load factor: %f\n", (float) ((float)(trie -> nextNode) / (float) (TABLE_SIZE(trie -> maxNode))));
+// }
+
 void freeTrie(Trie trie) {
   if (trie -> transition != NULL) {
-    for (int i = 0; i < (int) (((trie -> maxNode) - 1) / LOAD_FACTOR + 1); i++) {
+    for (int i = 0; i < (int) TABLE_SIZE(trie -> maxNode); i++) {
       List current = trie -> transition[i];
 
       while (current != NULL) {

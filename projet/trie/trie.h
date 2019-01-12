@@ -16,5 +16,4 @@ void insertInTrie(Trie trie, unsigned char *w);
 bool isInTrie(Trie trie, unsigned char *w);
 void disposeTrie(Trie *trie);
 void freeTrie(Trie trie);
-
 #endif //TRIE_H
