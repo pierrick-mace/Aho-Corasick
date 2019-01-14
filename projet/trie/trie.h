@@ -1,5 +1,5 @@
-#ifndef TRIE_H
-#define TRIE_H
+#ifndef __TRIE_H__
+#define __TRIE_H__
 
 #include <stdbool.h>
 #include <stdlib.h>

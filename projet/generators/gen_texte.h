@@ -1,5 +1,5 @@
-#ifndef __GEN_TEXTE__
-#define __GEN_TEXTE__
+#ifndef __GEN_TEXTE_H__
+#define __GEN_TEXTE_H__
 
 #include <stdio.h>
 
