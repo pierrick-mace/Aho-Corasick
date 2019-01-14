@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
     }
 
     printf("%lu\n", getOccurencesAC(ac, text));
-    
+
     fclose(text);
     freeTrie(trie);
     freeAC(ac);

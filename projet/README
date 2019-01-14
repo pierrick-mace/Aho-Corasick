@@ -1,0 +1,33 @@
+Notice d'utitilisation des programmes
+
+- Recherche de mots dans un texte en utilisant l'implémentation table de hachage de l'algorithme Aho-Corasick (Renvoie le nombre d'occurences des mots contenus dans fichier_mots dans le texte fichier_texte)
+
+ac-hachage fichier_mots fichier_texte
+
+Exemple: ac-hachage mots.txt texte.txt
+
+- Recherche de mots dans un texte en utilisant l'implémentation matrice de transitions de l'algorithme Aho-Corasick
+
+ac-matrice fichier_mots fichier_texte
+
+Exemple: ac-matrice mots.txt texte.txt
+
+- Génération pseudo-aléatoire d'un texte (renvoie le texte généré sur la sortie standard)
+
+genere-texte longueur_texte taille_alphabet
+
+Exemple: genere-texte 5000 4
+Génère un texte de longueur 5000 avec un alphabet de taille 4
+
+- Génération pseudo-aléatoire d'un ensemble de mots (renvoie l'ensemble de mots générés sur la sortie standard)
+
+genere-mots nombre_mots taille_min taille_max taille_alphabet
+
+Exemple: genere-mots 100 10 20 15
+Génère 100 mots de taille variable (entre 10 et 20) avec un alphabet de taille 15
+
+- Mesure du temps d'exécution des programmes (Mesure la moyenne du temps d'exécution de 100 itérations de commande)
+
+measure.sh commande
+
+Exemple: ./measure.sh "./ac-hachage tests/words_70_1.txt tests/text_70.txt"
